@@ -135,7 +135,8 @@ module Guard
         bundler_env ? ::Bundler.with_clean_env { _run(*args) } : _run(*args)
       end
 
-      def _commander(paths)
+      def _commander(_paths)
+        paths = _paths.map { |w| Shellwords.escape(w) }
         return drb_command(paths) if drb?
         return zeus_command(paths) if zeus?
         return spring_command(paths) if spring?

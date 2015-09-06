@@ -193,6 +193,18 @@ RSpec.describe Guard::Minitest::Runner do
       end
     end
 
+    context 'when file path contains spaces' do
+      before do
+        allow(Kernel).to receive(:system) { system('true') }
+        allow(Guard::Compat::UI).to receive(:error)
+      end
+
+      it 'outputs command escaped for shell' do
+        expect(Guard::Compat::UI).to receive(:debug).with("Running: ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_m\\ i\\ n\\ i\\ test.rb#{@require_old_runner} -e \"\" --")
+        subject.run(['test/test_m i n i test.rb'])
+      end
+    end
+
     context 'when binary is not found' do
       before do
         allow(Kernel).to receive(:system) { nil }
